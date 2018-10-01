@@ -9,7 +9,6 @@ import time
 
 from PIL import Image, ImageColor, ImageDraw, ImageFont
 
-font_path = "/System/Library/Fonts/Menlo.ttc"
 
 # Configure logging
 logging.basicConfig(
@@ -52,7 +51,7 @@ def merge_photo(*photos, **kwargs):
         y += im.size[1] + margin
 
     draw = ImageDraw.Draw(merged)
-    font = ImageFont.truetype(font_path, 72)
+    font = ImageFont.load_default()
     draw.text((20, heigth-72*2-20), "21 mars 2015", (255, 255, 255), font=font)
     draw.text((20, heigth-72-20), "   N <3 F", (255, 255, 255), font=font)
     return merged
@@ -83,7 +82,7 @@ class PhotoBooth(object):
             return (False, None)
 
         logging.info(gpout)
-        if "ERROR" not in gpout:
+        if b"ERROR" not in gpout:
             return (True, filename)
         else:
             return (False, None)
@@ -92,7 +91,7 @@ class PhotoBooth(object):
         """
         Merge picture passed as parameter
         """
-        merged = merge_photo(pictures_list,
+        merged = merge_photo(*pictures_list,
                              margin=30,
                              margin_top=30,
                              margin_bottom=200,
